@@ -2,7 +2,7 @@ import os, time, threading, requests
 from flask import Flask
 app = Flask(__name__)
 TOKEN = os.environ.get("TELEGRAM_TOKEN", "").strip()
-CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID","").strip()
+CHAT_ID = "7205695814"
 print(f"BOT AVVIATO - TOKEN: {bool(TOKEN)} - CHAT_ID: {CHAT_ID}", flush=True)
 def send_telegram(text): print("INVIO TELEGRAM...", flush=True); r = requests.post(f"https://api.telegram.org/bot{TOKEN}/sendMessage", json={"chat_id": CHAT_ID, "text": text}, timeout=10); print(f"TELEGRAM RISPOSTA: {r.status_code} - {r.text[:200]}", flush=True); return r.status_code == 200
 def bot_loop(): time.sleep(3); print("INVIO MESSAGGIO DI AVVIO...", flush=True); send_telegram("🤖 BOT V5 TELEGRAM AVVIATO - Il bot è online e funziona!")
