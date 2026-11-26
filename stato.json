@@ -1,1 +1,1 @@
-{"saldo": 98.0, "posizioni": {"ATOMUSDT": {"prezzo": 1.218, "importo": 2, "motivo": "BUONO TREND - RSI in crescita e prezzo in salita", "tipo": "TREND"}}, "storico": ["COMPRA ATOMUSDT 2E"]}
+{"saldo": 96.0, "posizioni": {"ATOMUSDT": {"prezzo": 1.218, "importo": 2, "motivo": "BUONO TREND - RSI in crescita e prezzo in salita", "tipo": "TREND"}, "OPUSDT": {"prezzo": 0.0705, "importo": 2, "motivo": "BUONO TREND - RSI in crescita e prezzo in salita", "tipo": "TREND"}}, "storico": ["COMPRA ATOMUSDT 2E", "COMPRA OPUSDT 2E"]}
