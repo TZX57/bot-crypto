@@ -22,7 +22,7 @@ def send_telegram(msg):
         print(f"Errore invio: {e}")
 
 def bot_loop():
-time.sleep(5)
+    time.sleep(5)
     send_telegram("🤖 BOT V5 TELEGRAM AVVIATO\nBot online e funzionante!")
     while True:
         time.sleep(60)
