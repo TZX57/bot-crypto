@@ -21,8 +21,8 @@ def check_asset(sym, is_crypto): prezzo, rsi, var = get_crypto(sym) if is_crypto
 def check_all(): [check_vendita(s) for s in list(POSIZIONI.keys())]; [check_asset(s, True) for s in CRYPTO]; [check_asset(s, False) for s in AZIONI]
 def report_21(): ora = datetime.datetime.now(); oggi = ora.strftime("%Y-%m-%d"); testo = f"📊 REPORT 21:00 - Ultime 24h\n💰 Saldo: {round(ST['saldo'],2)}€ / 100€\n🔢 Operazioni: {ST['op']}/50\n📂 Posizioni aperte: {len(POSIZIONI)}\n📜 Storico:\n" + "\n".join(STORICO[-20:]) if len(STORICO) > 0 else "📊 REPORT 21:00 - Nessuna operazione oggi, nessuna operazione forzata"; send_telegram(testo); ST["report"] = oggi
 def maybe_report(): o = datetime.datetime.now(); report_21() if o.hour == 21 and o.minute < 15 and ST["report"] != o.strftime("%Y-%m-%d") else None
-def bot_loop(): time.sleep(5); send_telegram("🤖 BOT FINALE ATTIVO - Controllo ogni 15m"); while True: check_all(); maybe_report(); time.sleep(900)
-def home(): return f"Bot Finale attivo - Saldo: {round(ST['saldo'],2)} - Op: {ST['op']} - Pos: {len(POSIZIONI)}"
+def tick(): check_all(); maybe_report(); threading.Timer(900, tick).start()
+def bot_loop(): time.sleep(5); send_telegram("🤖 BOT FINALE ATTIVO - Controllo ogni 15m"); tick()def home(): return f"Bot Finale attivo - Saldo: {round(ST['saldo'],2)} - Op: {ST['op']} - Pos: {len(POSIZIONI)}"
 def test(): ok = send_telegram("✅ TEST FINALE: Bot funziona!"); return f"Test: {ok}"
 app.add_url_rule("/", "home", home)
 app.add_url_rule("/test", "test", test)
