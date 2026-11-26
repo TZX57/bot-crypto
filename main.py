@@ -1,9 +1,11 @@
 import os, time, threading, requests, datetime
 from flask import Flask
 import json
-FILE_STATO = "stato.json"
-def salva_stato(): json.dump({"saldo": ST, "posizioni": POSIZIONI, "storico": STORICO}, open(FILE_STATO, "w"))
-def carica_stato(): (lambda d: [ST.update(d["saldo"]), POSIZIONI.update(d["posizioni"]), STORICO.extend(d["storico"])])(json.load(open(FILE_STATO))) if os.path.exists(FILE_STATO) else None
+import base64,urllib.request,json as _json
+def _gh_headers(): return {"Authorization":f"token {os.environ.get('GITHUB_TOKEN','')}","Accept":"application/vnd.github.v3+json","User-Agent":"bot-stato"}
+def _gh_url(): return f"https://api.github.com/repos/{os.environ.get('GITHUB_REPO','TZX57/bot-stato')}/contents/stato.json"
+def carica_stato(): exec("global SALDO,POSIZIONI\ntry:\n req=urllib.request.Request(_gh_url(),headers=_gh_headers())\n with urllib.request.urlopen(req,timeout=10) as r:\n d=_json.loads(r.read())\n c=_json.loads(base64.b64decode(d['content']).decode())\n SALDO=float(c.get('saldo',SALDO))\n POSIZIONI=c.get('posizioni',POSIZIONI)\n print(f'STATO CARICATO DA GITHUB - SALDO: {SALDO} POSIZIONI: {POSIZIONI}',flush=True)\nexcept Exception as e:\n print(f'NESSUNO STATO SU GITHUB, PARTO DA ZERO: {e}',flush=True)")
+def salva_stato(): exec("try:\n c=base64.b64encode(_json.dumps({'saldo':SALDO,'posizioni':POSIZIONI}).encode()).decode()\n sha=None\n try:\n req=urllib.request.Request(_gh_url(),headers=_gh_headers())\n with urllib.request.urlopen(req,timeout=10) as r:\n sha=_json.loads(r.read()).get('sha')\n except: pass\n p={'message':'aggiorna stato bot','content':c}\n if sha: p['sha']=sha\n req=urllib.request.Request(_gh_url(),data=_json.dumps(p).encode(),headers={**_gh_headers(),'Content-Type':'application/json'},method='PUT')\n with urllib.request.urlopen(req,timeout=10) as r:\n print(f'STATO SALVATO SU GITHUB - SALDO: {SALDO}',flush=True)\nexcept Exception as e:\n print(f'ERRORE SALVATAGGIO GITHUB: {e}',flush=True)")
 app = Flask(__name__)
 TOKEN = os.environ.get("TELEGRAM_TOKEN", "").strip()
 CHAT_ID = "7205695814"
